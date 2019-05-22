@@ -1,4 +1,4 @@
-package baseball;
+
 
 public class management {
 	protected Long time;		//시간

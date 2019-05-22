@@ -1,24 +1,38 @@
-package baseball;
 
-import java.applet.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
-import java.text.*;  
 import javax.swing.*;
 
-public class field extends JPanel{
+public class field extends JPanel implements ActionListener{
+	
+	private JPanel contentPane;
+	private JPanel contentPane2;
 	
 	MsgPanel msg = new MsgPanel();
 	SBOPanel sbo = new SBOPanel();
 	fieldPanel fld = new fieldPanel();
 	ScoreBoardPanel score;
 	baseballGame game;
+	JButton	backBt = new JButton("리그메뉴로");
 	
-	public field() {
-		initGame();
+	public field(JPanel panel) {
+		contentPane = new JPanel();
+		contentPane2 = panel;
+		decoratePanel();
 	}
 	
-	private void initField() {
+	public void decoratePanel() {
+		
+		backBt.setSize(100, 40);
+		backBt.setLocation(200, 350);
+		backBt.addActionListener(this);
+		contentPane.add(backBt);
+		add(contentPane);
+	}
+	
+	protected void initField(baseballGame game) {
 		
 		 msg = new MsgPanel();
 		 sbo = new SBOPanel();
@@ -30,77 +44,65 @@ public class field extends JPanel{
 		add(score);
 		add(fld);
 		
+		
 	}
 	
-	private void initGame() {
-		game = new baseballGame();
-		game.gameStart();
-		initField();
-	}
 	
 	public class fieldPanel extends JPanel {
 		@Override
 		  public void paintComponent( Graphics g ) {  
 			  
 			  super.paintComponent(g);
-			  drawField(g);
+			  
+			  //필드 전체 그리기 
+			      Graphics2D outField = (Graphics2D)g.create();
+			      Color groundColor = new Color(180, 104, 1);
+			      outField.setColor(groundColor);
+			      outField.fillArc(0,200,500,500,45,90);
+					
+				
+				//내야 필드
+				
+				  Graphics2D inField = (Graphics2D)g.create();
+				  Rectangle base = new Rectangle();
+				  base.setBounds(200,320,100,100);
+				  inField.setColor(Color.green);
+				  inField.rotate(Math.toRadians(45), base.x + base.width/2, base.y + base.height/2);
+				  inField.draw(base);
+				  inField.fill(base);
+				  
+				//Draw FirstBase
+					
+				  Graphics2D fB = (Graphics2D)g.create();
+				  Rectangle rec = new Rectangle();
+				  rec.setBounds(245,305,10,10);
+				  fB.setColor(Color.white);
+				  fB.rotate(Math.toRadians(45), rec.x + rec.width/2, rec.y + rec.height/2);
+				  fB.draw(rec);
+				  fB.fill(rec);
+				  
+				//Draw SecondBase
+					
+				  Graphics2D sB = (Graphics2D)g.create();
+				  Rectangle rec2 = new Rectangle();
+				  rec2.setBounds(305,365,10,10);
+				  sB.setColor(Color.white);
+				  sB.rotate(Math.toRadians(45), rec2.x + rec2.width/2, rec2.y + rec2.height/2);
+				  sB.draw(rec2);
+				  sB.fill(rec2);
+				  
+				  
+				//Draw ThirdBase
+					
+				  Graphics2D tB = (Graphics2D)g.create();
+				  Rectangle rec3 = new Rectangle();
+				  rec3.setBounds(185,365,10,10);
+				  tB.setColor(Color.white);
+				  tB.rotate(Math.toRadians(45), rec3.x + rec3.width/2, rec3.y + rec3.height/2);
+				  tB.draw(rec3);
+				  tB.fill(rec3);
+				  
 		   }
-		
-		public void drawField(Graphics g) {
-			//필드 전체 그리기
-				drawOutField(g);
-			
-			//내야 필드
-				drawInField(g);
-			 
-			  
-			//Draw FirstBase
-				
-			  Graphics2D fB = (Graphics2D)g.create();
-			  Rectangle rec = new Rectangle();
-			  rec.setBounds(245,305,10,10);
-			  fB.setColor(Color.white);
-			  fB.rotate(Math.toRadians(45), rec.x + rec.width/2, rec.y + rec.height/2);
-			  fB.draw(rec);
-			  fB.fill(rec);
-			  
-			//Draw SecondBase
-				
-			  Graphics2D sB = (Graphics2D)g.create();
-			  Rectangle rec2 = new Rectangle();
-			  rec2.setBounds(305,365,10,10);
-			  sB.setColor(Color.white);
-			  sB.rotate(Math.toRadians(45), rec2.x + rec2.width/2, rec2.y + rec2.height/2);
-			  sB.draw(rec2);
-			  sB.fill(rec2);
-			  
-			  
-			//Draw ThirdBase
-				
-			  Graphics2D tB = (Graphics2D)g.create();
-			  Rectangle rec3 = new Rectangle();
-			  rec3.setBounds(185,365,10,10);
-			  tB.setColor(Color.white);
-			  tB.rotate(Math.toRadians(45), rec3.x + rec3.width/2, rec3.y + rec3.height/2);
-			  tB.draw(rec3);
-			  tB.fill(rec3);
-		}
-		
-		public void drawOutField(Graphics g) {
-			Color groundColor = new Color(180, 104, 1);
-		      g.setColor(groundColor);
-		      g.fillArc(0,200,500,500,45,90);
-		}
-		
-		public void drawInField(Graphics g) {
-			 	Graphics2D inField = (Graphics2D)g.create();
-			  Rectangle base = new Rectangle();
-			  base.setBounds(200,320,100,100);
-			  inField.setColor(Color.green);
-			  inField.rotate(Math.toRadians(45), base.x + base.width/2, base.y + base.height/2);
-			  inField.draw(base);
-			  inField.fill(base);
-		}
 	}
 	 
 	 
@@ -372,12 +374,12 @@ public class field extends JPanel{
 		        
 		        teamLabel1 = new Label();
 		        teamLabel1.setFont(new Font("Dialog", Font.PLAIN, 18));
-		        teamLabel1.setText("HGU");
+		        teamLabel1.setText(game.getTeam1().getTeam());
 		        teamLabel1.setForeground(Color.yellow);
 		        
 		        teamLabel2 = new Label();
 		        teamLabel2.setFont(new Font("Dialog", Font.PLAIN, 18));
-		        teamLabel2.setText("COM");
+		        teamLabel2.setText(game.getTeam2().getTeam());
 		        teamLabel2.setForeground(Color.yellow);
 
 		        scoreLabel1 = new Label();
@@ -428,4 +430,13 @@ public class field extends JPanel{
 		        repaint();
 		    }
 		}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(this.backBt))
+		{
+			CardLayout cardLayout = (CardLayout) contentPane2.getLayout();
+            cardLayout.show(contentPane2, "Main2");
+		}
+	}
 }

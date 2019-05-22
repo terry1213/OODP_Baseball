@@ -1,4 +1,4 @@
-package baseball;
+
 
 import java.applet.*;
 import java.awt.*;
@@ -16,7 +16,8 @@ public class GameWindow extends JFrame {
 	
 	MainMenu mainPanel;
 	MainMenu2 mainPanel2 ;
-	
+	LeagueMenu leaguePanel;
+
 	private static GameWindow gamewindowObject;
 	
 	public static GameWindow getInstance() {
@@ -36,10 +37,13 @@ public class GameWindow extends JFrame {
 		
 		mainPanel= new MainMenu(contentPane);
 		mainPanel2 = new MainMenu2(contentPane);
+		leaguePanel = new LeagueMenu(contentPane);
 		
 		contentPane.setLayout(new CardLayout());
 		contentPane.add(mainPanel, "Main1");
 		contentPane.add(mainPanel2, "Main2");
+		contentPane.add(leaguePanel, "League");
+		
 		
 	
 		setTitle("Baseball game");

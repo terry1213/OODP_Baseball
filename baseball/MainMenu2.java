@@ -1,4 +1,4 @@
-package baseball;
+
 
 import java.applet.*;
 import java.awt.*;
@@ -67,14 +67,13 @@ public class MainMenu2 extends Menu implements ActionListener{
 		//�븸�뀡 由ъ뒪�꼫 �옱�젙�쓽
 				if (e.getSource().equals(this.normalGBt))
 				{	
-					field fieldPanel = new field();
-					contentPane.add(fieldPanel, "Field");
-					CardLayout cardLayout = (CardLayout) contentPane.getLayout();
-	                cardLayout.show(contentPane, "Field");
+					baseballGame game = new baseballGame(contentPane);
+	                
 				}
 				else if(e.getSource().equals(this.leagueGBt))
 				{
-					JOptionPane.showMessageDialog(this, "리그 게임");
+					CardLayout cardLayout = (CardLayout) contentPane.getLayout();
+	                cardLayout.show(contentPane, "League");	
 				}
 				else if(e.getSource().equals(this.arcadeGBt))
 				{

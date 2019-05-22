@@ -1,4 +1,3 @@
-package baseball;
 
 import java.applet.*;
 import java.awt.*;

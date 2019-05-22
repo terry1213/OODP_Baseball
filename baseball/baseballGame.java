@@ -1,11 +1,23 @@
 
 
-package baseball;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Random;
 
-import java.util.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 
 public class baseballGame {
+	
+	private JPanel contentPane;
+	
+	
 	protected team t1;   //팀 1번 
 	protected team t2;   //팀 2번 
 	
@@ -22,49 +34,103 @@ public class baseballGame {
 	protected String msg1; //메시지를 담는 변수. 
 	protected int gameFlag; //0이 되면 체인지, 1이 되면 
 	private int[][] scoreBoard = new int[2][11];	//스코어보드
+	private int[] scoreSum = new int[2];
+	
+	JFrame frame = new JFrame();
+    
+
+    JTextArea ta = new JTextArea();
+    TextAreaOutputStream taos = new TextAreaOutputStream( ta, 1000 );
+    PrintStream ps = new PrintStream( taos );
+	
+
+	field fieldPanel;
 	
 	
+//	-----------constructor for normal game--------------
+	public baseballGame(JPanel panel){
+		
+		contentPane = panel;
+		
+		fieldPanel = new field(contentPane);
+		contentPane.add(fieldPanel, "Field");
+		
+		this.isGameOver = false;
+		this.strike = 0;
+		this.ball = 0;
+		this.out = 0;
+		
+		frame.add( new JLabel(" Outout" ), BorderLayout.NORTH );
+		System.setOut( ps );
+	    System.setErr( ps );
+	    frame.add( new JScrollPane( ta )  );
+	    frame.pack();
+	    frame.setVisible( true );
+	    frame.setSize(800,600);
+	    
+	    
+		this.t1 = new team("HGU");
+		t1.setEntry();
+		this.t2 = new team("COM");
+		t2.setEntry();
+		gameStart();
+		
+
+	}
 	
-	public baseballGame(){
+	
+//	-----------constructor for League--------------
+	public baseballGame(JPanel panel, team t1, team t2){
+		
+		contentPane = panel;
+		
+		fieldPanel = new field(contentPane);
+		contentPane.add(fieldPanel, "Field");
 
 		this.isGameOver = false;
 		this.strike = 0;
 		this.ball = 0;
 		this.out = 0;
+		this.t1 = t1;
+		this.t2 = t2;
+		t2.setEntry();
+		gameStart();
+		
 	}
-	//게임이 시작됬을 때의 함수
+	
+	
+//	-----------------function of game start---------------------
 	public void gameStart() {
+		
 		resultList = new ArrayList<String>(36);
 		setList();
-		this.t1 = new team("HGU");
-		this.t2 = new team("COM");
-		
+
 		this.currentTeam = t1;
 
 		while(true) {
 			if(gameFlag == 0) {
 				this.plusInning();	//Inning 증
 
-				if(this.isGameOver())
+				if(this.isGameOver()) {
+					
+					fieldPanel.initField(this);
+					CardLayout cardLayout = (CardLayout) contentPane.getLayout();
+					cardLayout.show(contentPane, "Field");
 					break;
+				}
+					
 
-				msg1 = currentTeam.playerList.get(0).getTeam()+"팀의 " + this.getInning() + "공격입니다.";
-				//FileIO.getInputString();
-				printGameScreen();
+				print_attackORbatter(0);
 				}
 		
 		 
 		if(gameFlag == 0 || gameFlag == 1) { //gameFlag가 1이라면, 공수교대.
 
-			this.msg1 = currentTeam.getBatter() + "번 타자 "+currentTeam.playerList.get(currentTeam.getBatter()-1).getName()+" 타석에 들어섭니다.";
-			currentTeam.playerList.get(currentTeam.getBatter()-1).setLocation(0);	
-			currentTeam.inningRun=0;		
-			printGameScreen();
+			print_attackORbatter(1);
 			}
 		
 		
-		msg1 = "�� "+currentTeam.playerList.get(currentTeam.getBatter()-1).getCount() + "�� �����ϴ�!";
-		currentTeam.playerList.get(currentTeam.getBatter()-1).count++;//������++;
+		print_attackORbatter(2);
 
 					
 		//경우의 수 리스트를 불러온다.
@@ -74,116 +140,36 @@ public class baseballGame {
 		printGameScreen();
 
 			if(result.equals("스트라이크")){
-				strike++;	
-
-				//2 스트라이크 였으면, 
-				if(strike == 3)
-				{						
-					currentTeam.playerList.get(currentTeam.getBatter()-1).setLocation(-1); //타자를 베이스 밖으로.
-					currentTeam.playerList.get(currentTeam.getBatter()-1).so++;//삼진아웃.;
-					currentTeam.nextBatter();//타자는 다음 타자로 교체.
-					out++; //아웃카운트 증가.
-					gameFlag = 1;
-					msg1 = "삼진 아웃!";
-					if(out == 3)
-					{
-						gameFlag = 0;
-						msg1 = "삼진 아웃! 공수가 교체됩니다.";
-					}
-					clearCount();//아웃카운트를 초기화.					
-				}
-				else	//계속 진행.
-				{						
-					gameFlag = 2;
-				}
+				func_strike();
 			}
 
 			else if(result.equals("볼")) {//볼 
-				ball++;
-				if(ball == 4) {//볼이 3개 였다면.				
-						currentTeam.playerList.get(currentTeam.getBatter()-1).bb++;//4볼
-						clearCount();//카운트 초기화.
-						int run = this.runBase(currentTeam.playerList, 1); //���� ����
-						currentTeam.playerList.get(currentTeam.getBatter()-1).rbi += run;	//득점 증가.
-						currentTeam.nextBatter();
-						gameFlag = 1;
-						msg1 = "볼넷!";
-				}
-				else {				
-					gameFlag = 2;
-				}
+				func_ball();
 			}
 			
 			else if(result.equals("1루타"))	{//1루타
-		
-				currentTeam.playerList.get(currentTeam.getBatter()-1).singleH++;
-				clearCount();
-				int run = this.runBase(currentTeam.playerList, 1); //전체 베이스 개씩 진루.
-				currentTeam.playerList.get(currentTeam.getBatter()-1).rbi += run;	//현재 타자의 타점 누적.
-				currentTeam.nextBatter();//다음 타자
-				gameFlag = 1;
+				func_single();
 			}
 			else if(result.equals("2루타"))	{//2루타
 	
-				currentTeam.playerList.get(currentTeam.getBatter()-1).doubleH++;
-				clearCount();
-				int run = this.runBase(currentTeam.playerList, 2); //전체 베이스 한개씩 진루.
-				currentTeam.playerList.get(currentTeam.getBatter()-1).rbi += run;	//현재 타자의 타점 누적.
-				currentTeam.nextBatter();//다음 타자
-				gameFlag = 1;
+				func_double();
 			}
 			else if(result.equals("3루타"))	{//3루타
 			
-				currentTeam.playerList.get(currentTeam.getBatter()-1).tripleH++;
-				clearCount();
-				int run = this.runBase(currentTeam.playerList, 3); //전체 베이스 개씩 진루.
-				currentTeam.playerList.get(currentTeam.getBatter()-1).rbi += run;	//현재 타자의 타점 누적.
-				currentTeam.nextBatter();//다음 타자	
-				gameFlag = 1;
+				func_triple();
 			}						
 
 			else if(result.equals("홈런"))	{//홈런
-		
-				currentTeam.playerList.get(currentTeam.getBatter()-1).homerun++;
-				clearCount();
-				int run = this.runBase(currentTeam.playerList, 4); //전체 베이스 개씩 진루.
-				currentTeam.playerList.get(currentTeam.getBatter()-1).rbi += run;	//현재 타자의 타점 누적.
-				currentTeam.nextBatter();//다음 타자	
-				gameFlag = 1;
+				func_homerun();
 			}
 			else if(result.equals("파울")){
-				gameFlag = 2;
-		
-				//만약 2스트라이크 전이라면.
-				if(strike != 2)
-					strike++;	
+				func_foul();	
 			}
 			else if(result.equals("아웃")) {
-				out++;
-				if(out == 3)
-				{
-					currentTeam.playerList.get(currentTeam.getBatter()-1).setLocation(-1); //아웃.
-					currentTeam.nextBatter();
-					clearCount();
-					gameFlag = 0;
-				}
-				else
-				{
-					currentTeam.playerList.get(currentTeam.getBatter()-1).setLocation(-1); 
-					currentTeam.nextBatter();
-					clearCount();
-					gameFlag = 1;
-				}
+				func_out();
 			}
 			
-			int	i = currentTeam.team.equals("HGU") ? 0 : 1;
-			int j = Integer.parseInt(this.getInning().substring(0,1))-1;
-			scoreBoard[i][j] = currentTeam.getInningRun();
-			
-			if(gameFlag == 0) {
-				currentTeam.resetInningData();
-				currentTeam = (currentTeam.team.equals("HGU") ? t2 : t1);
-			}
+			scoreNchangeteam();
 			
 			
 		}
@@ -192,17 +178,30 @@ public class baseballGame {
 	public boolean isGameOver()
 	{
 		boolean result = false;
-		if(this.getInning().equals("3회말"))
+		if(this.getInning().equals("9회말"))
 		{
 			if(t1.getRun() < t2.getRun()) {
 				result = true;
 				printGameOverScreen();
+				t1.result("lose");
+				t2.result("win");
 			}
 		}
 		else if(this.getInning().equals("게임끝")){
 				result = true;
 				printGameOverScreen();
+				if(scoreSum[0] < scoreSum[1]) {
+					t2.result("win");
+					t1.result("lose");
+				}else if(scoreSum[0] > scoreSum[1]) {
+					t1.result("win");
+					t2.result("lose");
+				}else {
+					t1.result("draw");
+					t2.result("draw");
+				}
 		}
+		
 		return result;
 	}	
 	public void exitProgram() {
@@ -229,82 +228,118 @@ public class baseballGame {
 	}
 	
 	public void printGameScreen() { 
+		scoreSum[0] = scoreBoard[0][0]+scoreBoard[0][1]+scoreBoard[0][2]+scoreBoard[0][3]+scoreBoard[0][4]+scoreBoard[0][5]+scoreBoard[0][6]+scoreBoard[0][7]+scoreBoard[0][8];
+		scoreSum[1] = scoreBoard[1][0]+scoreBoard[1][1]+scoreBoard[1][2]+scoreBoard[1][3]+scoreBoard[1][4]+scoreBoard[1][5]+scoreBoard[1][6]+scoreBoard[1][7]+scoreBoard[1][8];
 		System.out.printf("==============================================================\n");
 		System.out.printf(" 이닝  |  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 |  R |  H |\n");
 		System.out.printf("==============================================================\n");
-		System.out.printf(" HGU  |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |\n",scoreBoard[0][0],scoreBoard[0][1],scoreBoard[0][2],scoreBoard[0][3],scoreBoard[0][4],scoreBoard[0][5],scoreBoard[0][6],scoreBoard[0][7],scoreBoard[0][8],scoreBoard[0][0]+scoreBoard[0][1]+scoreBoard[0][2]+scoreBoard[0][3]+scoreBoard[0][4]+scoreBoard[0][5]+scoreBoard[0][6]+scoreBoard[0][7]+scoreBoard[0][8],t1.getHits());
+		System.out.printf(" %3s  |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |\n", t1.getTeam(), scoreBoard[0][0],scoreBoard[0][1],scoreBoard[0][2],scoreBoard[0][3],scoreBoard[0][4],scoreBoard[0][5],scoreBoard[0][6],scoreBoard[0][7],scoreBoard[0][8],scoreSum[0],t1.getHits());
 		System.out.printf("==============================================================\n");
-		System.out.printf(" COM  |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |\n",scoreBoard[1][0],scoreBoard[1][1],scoreBoard[1][2],scoreBoard[1][3],scoreBoard[1][4],scoreBoard[1][5],scoreBoard[1][6],scoreBoard[1][7],scoreBoard[1][8],scoreBoard[1][0]+scoreBoard[1][1]+scoreBoard[1][2]+scoreBoard[1][3]+scoreBoard[1][4]+scoreBoard[1][5]+scoreBoard[1][6]+scoreBoard[1][7]+scoreBoard[1][8],t2.getHits());
+		System.out.printf(" %3s  |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |%3d |\n", t2.getTeam(),scoreBoard[1][0],scoreBoard[1][1],scoreBoard[1][2],scoreBoard[1][3],scoreBoard[1][4],scoreBoard[1][5],scoreBoard[1][6],scoreBoard[1][7],scoreBoard[1][8],scoreSum[1],t2.getHits());
 		System.out.printf("   => %s         \r",msg1);
 	}//end printGameScreen()
 	
 	
-//	//Referee
-//	public void hit1(){
-//		
-//	}
-//	public void hit2(){
-//		
-//	}
-//	public void hit3(){
-//		
-//	}
-//	public void homerun(){
-//		
-//	}
-//	public void fourBall() {}
-//	public void foul(){
-//		if(this.strike<2) this.strike++;
-//		
-//		System.out.println("파울!");
-//	}
-//	
-//	public void out(){
-//		if(this.out==2) {
-//			change();
-//			this.out=0;
-//		}
-//		else {
-//			this.out++;
-//			System.out.println("아웃!");
-//		}
-//	}
-//	
-//	public void strike() {
-//		if(this.strike==2) {
-//			out();
-//			this.strike=0;
-//		}else {
-//			this.strike++;
-//			System.out.println("스트라이크!");
-//		}
-//	}
-//	
-//	public void ball() {
-//		if(this.ball==3) {
-//			fourBall();
-//			this.ball=0;
-//		}else {
-//			this.ball++;
-//			System.out.println("볼!");
-//		}
-//	}
-//	
-//	public void change() {
-//		if(this.isTop) {
-//			isTop=!isTop;
-//			System.out.println("공수 체인지! "+inning+"회 "+(isTop?"초":"말")+"입니다.");
-//		}
-//		else {
-//			if(this.inning==9) {
-//				isGameOver=true;
-//			}else {
-//				this.inning++;
-//				isTop=!isTop;
-//				System.out.println("이닝 체인지! "+inning+"회 초 입니다.");
-//			}
-//		}
-//	}
+	//------------------------------------functions about playing---------------------------------------------
+	
+		public void func_strike() {
+			strike++;	
+
+			//2 스트라이크 였으면, 
+			if(strike == 3)
+			{						
+				currentTeam.entryList.get(currentTeam.getBatter()-1).setLocation(-1); //타자를 베이스 밖으로.
+				currentTeam.entryList.get(currentTeam.getBatter()-1).so++;//삼진아웃.;
+				currentTeam.nextBatter();//타자는 다음 타자로 교체.
+				out++; //아웃카운트 증가.
+				gameFlag = 1;
+				msg1 = "삼진 아웃!";
+				if(out == 3)
+				{
+					gameFlag = 0;
+					msg1 = "삼진 아웃! 공수가 교체됩니다.";
+				}
+				clearCount();//아웃카운트를 초기화.					
+			}
+			else	//계속 진행.
+			{						
+				gameFlag = 2;
+				
+			}
+		}
+		
+		public void func_ball() {
+			ball++;
+			if(ball == 4) {//볼이 3개 였다면.				
+					currentTeam.entryList.get(currentTeam.getBatter()-1).bb++;//4볼
+					clearCount();//카운트 초기화.
+					int run = this.runBase(currentTeam.entryList, 1); //���� ����
+					currentTeam.entryList.get(currentTeam.getBatter()-1).rbi += run;	//득점 증가.
+					currentTeam.nextBatter();
+					gameFlag = 1;
+					msg1 = "볼넷!";
+			}
+			else {				
+				gameFlag = 2;
+			}
+		}
+		
+		public void func_single() {
+			currentTeam.entryList.get(currentTeam.getBatter()-1).singleH++;
+			clearCount();
+			int run = this.runBase(currentTeam.entryList, 1); //전체 베이스 개씩 진루.
+			currentTeam.entryList.get(currentTeam.getBatter()-1).rbi += run;	//현재 타자의 타점 누적.
+			currentTeam.nextBatter();//다음 타자
+			gameFlag = 1;
+		}
+		public void func_double() {
+			currentTeam.entryList.get(currentTeam.getBatter()-1).doubleH++;
+			clearCount();
+			int run = this.runBase(currentTeam.entryList, 2); //전체 베이스 한개씩 진루.
+			currentTeam.entryList.get(currentTeam.getBatter()-1).rbi += run;	//현재 타자의 타점 누적.
+			currentTeam.nextBatter();//다음 타자
+			gameFlag = 1;
+		}
+		public void func_triple() {
+			currentTeam.entryList.get(currentTeam.getBatter()-1).tripleH++;
+			clearCount();
+			int run = this.runBase(currentTeam.entryList, 3); //전체 베이스 개씩 진루.
+			currentTeam.entryList.get(currentTeam.getBatter()-1).rbi += run;	//현재 타자의 타점 누적.
+			currentTeam.nextBatter();//다음 타자	
+			gameFlag = 1;
+		}
+		public void func_homerun() {
+			currentTeam.entryList.get(currentTeam.getBatter()-1).homerun++;
+			clearCount();
+			int run = this.runBase(currentTeam.entryList, 4); //전체 베이스 개씩 진루.
+			currentTeam.entryList.get(currentTeam.getBatter()-1).rbi += run;	//현재 타자의 타점 누적.
+			currentTeam.nextBatter();//다음 타자	
+			gameFlag = 1;
+		}
+		public void func_foul() {
+			gameFlag = 2;
+			
+			//만약 2스트라이크 전이라면.
+			if(strike != 2)
+				strike++;	
+		}
+		public void func_out() {
+			out++;
+			if(out == 3)
+			{
+				currentTeam.entryList.get(currentTeam.getBatter()-1).setLocation(-1); //아웃.
+				currentTeam.nextBatter();
+				clearCount();
+				gameFlag = 0;
+			}
+			else
+			{
+				currentTeam.entryList.get(currentTeam.getBatter()-1).setLocation(-1); 
+				currentTeam.nextBatter();
+				clearCount();
+				gameFlag = 1;
+			}
+		}
 	
 	public void plusInning() {
 		this.inning++;
@@ -317,8 +352,8 @@ public class baseballGame {
 	public void printGameOverScreen() {
 		System.out.println("게임이 종료되었습니다.");
 		System.out.println("점수는 다음과 같습니다.");
-		System.out.printf("HGU : %d\n" ,scoreBoard[0][0]+scoreBoard[0][1]+scoreBoard[0][2]+scoreBoard[0][3]+scoreBoard[0][4]+scoreBoard[0][5]+scoreBoard[0][6]+scoreBoard[0][7]+scoreBoard[0][8]);
-		System.out.printf("COM : %d\n" ,scoreBoard[1][0]+scoreBoard[1][1]+scoreBoard[1][2]+scoreBoard[1][3]+scoreBoard[1][4]+scoreBoard[1][5]+scoreBoard[1][6]+scoreBoard[1][7]+scoreBoard[1][8]);
+		System.out.printf("%3s : %d\n" , t1.getTeam(), scoreSum[0]);
+		System.out.printf("%3s : %d\n" , t2.getTeam(), scoreSum[1]);
 	}
 	
 	public void printExitScreen() {
@@ -346,18 +381,18 @@ public class baseballGame {
 		this.resultList.add("3루타");			
 		this.resultList.add("홈런");				
 
-		for(int i=0; i< 3; i++) { this.resultList.add("2루타"); } 
+		for(int i=0; i< 2; i++) { this.resultList.add("2루타"); } 
 
 		for(int i=0; i< 5; i++) {			
 			this.resultList.add("스트라이크");
 			this.resultList.add("파울");		
 		}
 
-		for(int i=0; i< 4; i++) { this.resultList.add("1루타"); } 
+		for(int i=0; i< 3; i++) { this.resultList.add("1루타"); } 
 
 		for(int i=0; i< 7; i++) { this.resultList.add("볼"); } 
 
-		for(int i=0; i< 10; i++) { this.resultList.add("아웃"); } 
+		for(int i=0; i< 30; i++) { this.resultList.add("아웃"); } 
 	}//end setList
 
 
@@ -468,5 +503,39 @@ public class baseballGame {
 	public team getTeam2() {
 		return t2;
 	}
+	
+//	---------------------functions about score, changing team, changing attack, batter------------------------------------------------
+	
+	public void scoreNchangeteam() {
+		int	i = currentTeam.team.equals(t1.getTeam()) ? 0 : 1;
+		int j = Integer.parseInt(this.getInning().substring(0,1))-1;
+		scoreBoard[i][j] = currentTeam.getInningRun();
+			
+		if(gameFlag == 0) {
+			currentTeam.resetInningData();
+			currentTeam = (currentTeam.team.equals(t1.getTeam()) ? t2 : t1);
+		}
+	}
+	
+	
+	public void print_attackORbatter(int a) {
+		if (a==0){
+			msg1 = currentTeam.entryList.get(0).getTeam()+"팀의 " + this.getInning() + "공격입니다.";
+			//FileIO.getInputString();
+			printGameScreen();
+		}
+		else if(a==1) {
+			this.msg1 = currentTeam.getBatter() + "번 타자 "+currentTeam.entryList.get(currentTeam.getBatter()-1).getName()+" 타석에 들어섭니다.";
+			currentTeam.entryList.get(currentTeam.getBatter()-1).setLocation(0);	
+			currentTeam.inningRun=0;		
+			printGameScreen();
+		}
+		else {
+			msg1 = "????"+currentTeam.entryList.get(currentTeam.getBatter()-1).getCount() + "????!";
+			currentTeam.entryList.get(currentTeam.getBatter()-1).count++;//count++;
+		}
+			
+	}
+	//------------------------------------------------------------------------------
 
 }
