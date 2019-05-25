@@ -1,5 +1,6 @@
 
 import java.util.*;
+import java.util.Iterator;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,7 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-public class team extends management{
+public class team extends management implements Aggregate{
 	
 	protected boolean isHome;
 	
@@ -27,6 +28,14 @@ public class team extends management{
 		super.team = team;
 		addPlayer();
 		this.entryList=new ArrayList<player>();
+	}
+	
+	public player getPlayerAt(int index) {
+		return entryList.get(index);
+	}
+	
+	public int getLength() {
+		return entryList.size();
 	}
 
 	public ArrayList<player> getAllEntryList(){
@@ -175,4 +184,10 @@ public class team extends management{
 	public int getLose() {
 		return lose;
 	}
+
+	public Iterator iterator() {
+		return new teamIterator(this);
+	}
+	
+	
 }

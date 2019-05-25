@@ -1,12 +1,10 @@
 
 
 import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -81,20 +79,27 @@ public void initPanel() {
 	
 	
 	//Assign player names into Arraylist.
+	
 	for(player p1 : t.getAllEntryList()) {
 		wholePlayers.add(p1.getName());
 	}
-
-	for(player p2 : t.getEntryList()) {
-		entry.add(p2.getName());
+	
+	Iterator it = t.iterator();
+	while(it.hasNext()) {
+		player p = (player)it.next();
+		entry.add(p.getName());
 	}
-	    for (String element : wholePlayers) {
-	      ((DefaultListModel) playerList.getModel()).addElement(element);
-	    }
+//	for(player p2 : t.getEntryList()) {
+//		entry.add(p2.getName());
+//	}
+	
+	for (String element : wholePlayers) {
+	   ((DefaultListModel) playerList.getModel()).addElement(element);
+	}
 
-	    for (String element : entry) {
-	      ((DefaultListModel) entryList.getModel()).addElement(element);
-	 }
+	for (String element : entry) {
+	   ((DefaultListModel) entryList.getModel()).addElement(element);
+	}
 	    
 	    scrollPane_1.setViewportView(playerList);
 	    scrollPane.setViewportView(entryList);

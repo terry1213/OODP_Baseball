@@ -12,7 +12,7 @@ public class field extends JPanel implements ActionListener{
 	
 	MsgPanel msg = new MsgPanel();
 	SBOPanel sbo = new SBOPanel();
-	fieldPanel fld = new fieldPanel();
+	//fieldPanel fld = new fieldPanel();
 	ScoreBoardPanel score;
 	baseballGame game;
 	JButton	backBt = new JButton("리그메뉴로");
@@ -36,74 +36,74 @@ public class field extends JPanel implements ActionListener{
 		
 		 msg = new MsgPanel();
 		 sbo = new SBOPanel();
-		 fld = new fieldPanel();
+		 //fld = new fieldPanel();
 		 score = new ScoreBoardPanel(game);
 
 		add(msg);
 		add(sbo);
 		add(score);
-		add(fld);
+		//add(fld);
 		
 		
 	}
 	
 	
-	public class fieldPanel extends JPanel {
-		@Override
-		  public void paintComponent( Graphics g ) {  
-			  
-			  super.paintComponent(g);
-			  
-			  //필드 전체 그리기 
-			      Graphics2D outField = (Graphics2D)g.create();
-			      Color groundColor = new Color(180, 104, 1);
-			      outField.setColor(groundColor);
-			      outField.fillArc(0,200,500,500,45,90);
-					
+	
+	@Override
+	  public void paintComponent( Graphics g ) {  
+		  
+		  super.paintComponent(g);
+		  
+		  //�븘�뱶 �쟾泥� 洹몃━湲� 
+		      Graphics2D outField = (Graphics2D)g.create();
+		      Color groundColor = new Color(180, 104, 1);
+		      outField.setColor(groundColor);
+		      outField.fillArc(0,250,500,500,45,90);
 				
-				//내야 필드
+			
+			//�궡�빞 �븘�뱶
+			
+			  Graphics2D inField = (Graphics2D)g.create();
+			  Rectangle base = new Rectangle();
+			  base.setBounds(200,370,100,100);
+			  inField.setColor(Color.green);
+			  inField.rotate(Math.toRadians(45), base.x + base.width/2, base.y + base.height/2);
+			  inField.draw(base);
+			  inField.fill(base);
+			  
+			//Draw FirstBase
 				
-				  Graphics2D inField = (Graphics2D)g.create();
-				  Rectangle base = new Rectangle();
-				  base.setBounds(200,320,100,100);
-				  inField.setColor(Color.green);
-				  inField.rotate(Math.toRadians(45), base.x + base.width/2, base.y + base.height/2);
-				  inField.draw(base);
-				  inField.fill(base);
-				  
-				//Draw FirstBase
-					
-				  Graphics2D fB = (Graphics2D)g.create();
-				  Rectangle rec = new Rectangle();
-				  rec.setBounds(245,305,10,10);
-				  fB.setColor(Color.white);
-				  fB.rotate(Math.toRadians(45), rec.x + rec.width/2, rec.y + rec.height/2);
-				  fB.draw(rec);
-				  fB.fill(rec);
-				  
-				//Draw SecondBase
-					
-				  Graphics2D sB = (Graphics2D)g.create();
-				  Rectangle rec2 = new Rectangle();
-				  rec2.setBounds(305,365,10,10);
-				  sB.setColor(Color.white);
-				  sB.rotate(Math.toRadians(45), rec2.x + rec2.width/2, rec2.y + rec2.height/2);
-				  sB.draw(rec2);
-				  sB.fill(rec2);
-				  
-				  
-				//Draw ThirdBase
-					
-				  Graphics2D tB = (Graphics2D)g.create();
-				  Rectangle rec3 = new Rectangle();
-				  rec3.setBounds(185,365,10,10);
-				  tB.setColor(Color.white);
-				  tB.rotate(Math.toRadians(45), rec3.x + rec3.width/2, rec3.y + rec3.height/2);
-				  tB.draw(rec3);
-				  tB.fill(rec3);
-				  
-		   }
-	}
+			  Graphics2D fB = (Graphics2D)g.create();
+			  Rectangle rec = new Rectangle();
+			  rec.setBounds(245,355,10,10);
+			  fB.setColor(Color.white);
+			  fB.rotate(Math.toRadians(45), rec.x + rec.width/2, rec.y + rec.height/2);
+			  fB.draw(rec);
+			  fB.fill(rec);
+			  
+			//Draw SecondBase
+				
+			  Graphics2D sB = (Graphics2D)g.create();
+			  Rectangle rec2 = new Rectangle();
+			  rec2.setBounds(305,415,10,10);
+			  sB.setColor(Color.white);
+			  sB.rotate(Math.toRadians(45), rec2.x + rec2.width/2, rec2.y + rec2.height/2);
+			  sB.draw(rec2);
+			  sB.fill(rec2);
+			  
+			  
+			//Draw ThirdBase
+				
+			  Graphics2D tB = (Graphics2D)g.create();
+			  Rectangle rec3 = new Rectangle();
+			  rec3.setBounds(185,415,10,10);
+			  tB.setColor(Color.white);
+			  tB.rotate(Math.toRadians(45), rec3.x + rec3.width/2, rec3.y + rec3.height/2);
+			  tB.draw(rec3);
+			  tB.fill(rec3);
+			  
+	   }
+	
 	 
 	 
 	 public class MsgPanel extends JPanel{
