@@ -16,6 +16,10 @@ public class LeagueMenu extends Menu implements ActionListener{
 	JButton	backBt = new JButton("뒤로");
 	JButton	rankingBt = new JButton("순위표");
 	
+	private beforeLeague before = new beforeLeague();
+ 	private ongoingLeague ongoing = new ongoingLeague();
+ 	private finishedLeague finished = new finishedLeague();
+	
 	League nLeague;
 	
 	public LeagueMenu(JPanel panel) {
@@ -67,6 +71,11 @@ public class LeagueMenu extends Menu implements ActionListener{
 					baseballGame game = new baseballGame(contentPane, nLeague.getTeam(0), nLeague.getTeam(1));
 					nLeague.fakeComGame();
 					nLeague.increaseRound();
+					if(nLeague.getRound() == 9) {
+						nLeague.setLeagueState(finished);
+					}else {
+						nLeague.setLeagueState(ongoing);
+					}
 				}
 				else if(e.getSource().equals(this.entryBt))
 				{
@@ -83,7 +92,7 @@ public class LeagueMenu extends Menu implements ActionListener{
 				}
 				else if(e.getSource().equals(this.rankingBt))
 				{
-					RankingList ranking = new RankingList(contentPane, nLeague.getTeamArray());
+					RankingList ranking = new RankingList(contentPane, nLeague);
 					
 					contentPane.add(ranking, "Ranking");
 					CardLayout cardLayout = (CardLayout) contentPane.getLayout();

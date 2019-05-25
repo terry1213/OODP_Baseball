@@ -8,7 +8,9 @@ import java.io.IOException;
 
 
 public class team extends management{
+	
 	protected boolean isHome;
+	
 	protected int score;
 	protected ArrayList<player> allPlayerList;//모든 선수 명단
 	protected ArrayList<player> entryList;//선발 명단
@@ -153,6 +155,12 @@ public class team extends management{
 			lose++;
 		}else {
 			draw++;
+		}
+	}
+	
+	public void resetHit() {
+		for(int i = 0; i < this.entryList.size(); i++){
+			this.entryList.get(i).resetH();
 		}
 	}
 	

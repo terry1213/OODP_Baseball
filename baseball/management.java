@@ -26,6 +26,12 @@ public class management {
 	public void setTeam(String team) {	this.team = team; }
 	public String getTeam() {	return this.team;	}
 		
+	public void resetH() {
+		this.singleH = 0;
+		this.doubleH = 0;
+		this.tripleH = 0;
+		this.homerun = 0;
+	}
 
 	public int getCount(){	return this.count+1;	}
 

@@ -92,7 +92,9 @@ public class baseballGame {
 		this.ball = 0;
 		this.out = 0;
 		this.t1 = t1;
+		this.t1.resetHit();
 		this.t2 = t2;
+		this.t2.resetHit();
 		t2.setEntry();
 		gameStart();
 		

@@ -16,13 +16,10 @@ import javax.swing.JScrollPane;
 
 public class EntryPanel extends JPanel implements ActionListener{
 	
-	JPanel mainP = new JPanel();
-	
 	JButton goR = new JButton("->");
 	JButton goL = new JButton("<-");
 	JButton btnCompelete = new JButton("Compelete");
 	
-	ArrayList<player> fnEntry;
 	ArrayList<player> fnWholeEntry;
 	
 	ArrayList<String> wholePlayers;

@@ -4,10 +4,8 @@ import java.util.Random;
 
 public class League {
 	
+	private leagueState state;
 	protected int year;
-	protected ArrayList<team> teams;
-	protected int maxGames;
-	protected int curGames;
 	private team[] teamArray = new team[10];
 	private int round = 0;
 	private int[][][] matching = {
@@ -42,6 +40,7 @@ public class League {
 
 
 	public League() { 
+		this.state = new beforeLeague();
 		round = 0;
 		teamArray[0] = new team("HGU");
 		teamArray[1] = new team("SL");
@@ -65,6 +64,10 @@ public class League {
 	
 	public void increaseRound() {
 		round++;
+	}
+	
+	public int getRound() {
+		return round;
 	}
 	
 	public void fakeComGame() {
@@ -101,5 +104,13 @@ public class League {
 
 	public String toString() {
 		return String.valueOf(year);
+	}
+	
+	public void setLeagueState(leagueState state) {
+		this.state = state;
+	}
+	
+	public leagueState getLeagueState() {
+		return this.state;
 	}
 }

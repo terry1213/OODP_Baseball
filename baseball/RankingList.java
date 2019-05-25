@@ -13,6 +13,7 @@ public class RankingList extends JPanel implements ActionListener{
 	private JPanel contentPane2;
 	private JPanel contentPane3;
  	private Label baseLabel;
+ 	private Label stateLabel;
     private Label rankLabel1;
     private Label rankLabel2;
     private Label rankLabel3;
@@ -26,7 +27,7 @@ public class RankingList extends JPanel implements ActionListener{
 	JButton btnBack = new JButton("뒤로가기");
 	private team[] sortedTeam = new team[10];;
 	
-	public RankingList(JPanel panel, team[] teamArray) {
+	public RankingList(JPanel panel, League nLeague) {
 		
 		contentPane3 = panel;
 		String buffer;
@@ -43,7 +44,15 @@ public class RankingList extends JPanel implements ActionListener{
         contentPane2.setBackground(Color.black);
         contentPane2.setPreferredSize(new Dimension(500, 300));
         
-        sortingTeam(teamArray);
+        stateLabel = new Label();
+        stateLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
+        stateLabel.setText(nLeague.getLeagueState().printMessage());
+        stateLabel.setForeground(Color.white);
+        stateLabel.setLocation(210, 5);
+        stateLabel.setSize(400, 25);
+        contentPane2.add(stateLabel);
+        
+        sortingTeam(nLeague.getTeamArray());
         
         baseLabel = new Label();
         baseLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
