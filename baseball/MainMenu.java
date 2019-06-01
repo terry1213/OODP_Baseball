@@ -1,3 +1,4 @@
+package baseball;
 
 import java.applet.*;
 import java.awt.*;
@@ -17,9 +18,9 @@ public class MainMenu extends Menu implements ActionListener{
 	
 	private JPanel contentPane;
 	
-	JButton startBt = new JButton("게임 시작");
-	JButton	exitBt = new JButton("종료");
-	JLabel lblBaseballManager_1 = new JLabel("Baseball Manager 2019");
+	private JButton startBt = new JButton("게임 시작");
+	private JButton	exitBt = new JButton("종료");
+	private JLabel lblBaseballManager_1 = new JLabel("Baseball Manager 2019");
 	
 	
 	public MainMenu(JPanel panel) {

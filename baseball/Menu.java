@@ -1,4 +1,4 @@
-
+package baseball;
 
 import java.applet.*;
 import java.awt.*;
@@ -14,8 +14,8 @@ import java.awt.event.ActionListener;
 
 public abstract class Menu extends JPanel{
 	
-	ImageIcon bgImg = new ImageIcon("/Users/seosang-won/eclipse-workspace/oodp_baseball/src/baseball/img/baseball_background.jpg");
-	JLabel bg = new JLabel(bgImg);
+	private ImageIcon bgImg = new ImageIcon("/Users/seosang-won/eclipse-workspace/oodp_baseball/src/img/baseball_background.jpg");
+	protected JLabel bg = new JLabel(bgImg);
 
 	
 	public void setBackground() {

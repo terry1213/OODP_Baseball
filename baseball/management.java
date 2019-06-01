@@ -1,14 +1,14 @@
-
+package baseball;
 
 public class management {
-	protected Long time;		//시간
+	private Long time;		//시간
 	protected String team;		//팀
-	protected int win;			//승리
-	protected int draw;			//무승부
-	protected int lose;			//패배
+	private int win;			//승리
+	private int draw;			//무승부
+	private int lose;			//패배
 
 	protected int count;		//
-	protected double avg;		//타율 
+	private double avg;		//타율 
 	protected int singleH;		//1루타
 	protected int doubleH;		//2루타
 	protected int tripleH;		//3루타
@@ -17,7 +17,7 @@ public class management {
 	protected int inningRun;	//이닝 점수
 	protected int rbi;			//타점
 	protected int bb;			//볼넷
-	protected int so;			//삼진
+	int so;			//삼진
 
 	public void setTime(Long time) { this.time = time;	}
 	public Long getTime() {	return this.time; }

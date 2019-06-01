@@ -1,3 +1,5 @@
+package baseball;
+
 import java.util.Iterator;
 
 public class teamIterator implements Iterator{

@@ -1,3 +1,4 @@
+package baseball;
 
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
@@ -11,16 +12,16 @@ public class LeagueMenu extends Menu implements ActionListener{
 
 	private JPanel contentPane;
 	
-	JButton	proceedGBt = new JButton("경기 진행");
-	JButton	entryBt = new JButton("엔트리");
-	JButton	backBt = new JButton("뒤로");
-	JButton	rankingBt = new JButton("순위표");
+	private JButton	proceedGBt = new JButton("경기 진행");
+	private JButton	entryBt = new JButton("엔트리");
+	private JButton	backBt = new JButton("뒤로");
+	private JButton	rankingBt = new JButton("순위표");
 	
 	private beforeLeague before = new beforeLeague();
  	private ongoingLeague ongoing = new ongoingLeague();
  	private finishedLeague finished = new finishedLeague();
 	
-	League nLeague;
+	private League nLeague;
 	
 	public LeagueMenu(JPanel panel) {
 		nLeague = new League();

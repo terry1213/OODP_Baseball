@@ -1,3 +1,4 @@
+package baseball;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -5,7 +6,7 @@ import java.util.Random;
 public class League {
 	
 	private leagueState state;
-	protected int year;
+	private int year;
 	private team[] teamArray = new team[10];
 	private int round = 0;
 	private int[][][] matching = {

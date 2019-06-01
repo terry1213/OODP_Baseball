@@ -1,3 +1,4 @@
+package baseball;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,7 +25,7 @@ public class RankingList extends JPanel implements ActionListener{
     private Label rankLabel8;
     private Label rankLabel9;
     private Label rankLabel10;
-	JButton btnBack = new JButton("뒤로가기");
+    private JButton btnBack = new JButton("뒤로가기");
 	private team[] sortedTeam = new team[10];;
 	
 	public RankingList(JPanel panel, League nLeague) {
@@ -56,7 +57,7 @@ public class RankingList extends JPanel implements ActionListener{
         
         baseLabel = new Label();
         baseLabel.setFont(new Font("Dialog", Font.PLAIN, 18));
-        baseLabel.setText("Lank  Team    win    draw  lose");
+        baseLabel.setText("Rank  Team    win    draw  lose");
         baseLabel.setForeground(Color.white);
         
         rankLabel1 = new Label();
@@ -180,10 +181,20 @@ public class RankingList extends JPanel implements ActionListener{
 		for(int i = 1; i < 10; i++) {
 			temTeam = sortedTeam[i];
 			for(int j = i - 1;  j > -1; j--) {
-				if(sortedTeam[j].getWin() >= temTeam.getWin()) {
+				if(sortedTeam[j].getWin() > temTeam.getWin()) {
 					sortedTeam[j + 1] = temTeam;
 					break;
-				}else {
+				}else if(sortedTeam[j].getWin() == temTeam.getWin()){
+					if(sortedTeam[j].getDraw() >= temTeam.getDraw()) {
+						sortedTeam[j + 1] = temTeam;
+						break;
+					}else {
+						sortedTeam[j + 1] = sortedTeam[j];
+						if(j == 0) {
+							sortedTeam[j] = temTeam;
+						}
+					}
+				}else{
 					sortedTeam[j + 1] = sortedTeam[j];
 					if(j == 0) {
 						sortedTeam[j] = temTeam; 

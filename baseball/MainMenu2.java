@@ -1,4 +1,4 @@
-
+package baseball;
 
 import java.applet.*;
 import java.awt.*;
@@ -15,11 +15,11 @@ public class MainMenu2 extends Menu implements ActionListener{
 	
 	private JPanel contentPane;
 	
-	JButton	normalGBt = new JButton("친선전");
-	JButton	leagueGBt = new JButton("리그");
-	JButton arcadeGBt = new JButton("아케이드");
-	JButton	backBt = new JButton("뒤로");
-	baseballGame game;
+	private JButton	normalGBt = new JButton("친선전");
+	private JButton	leagueGBt = new JButton("리그");
+	private JButton arcadeGBt = new JButton("아케이드");
+	private JButton	backBt = new JButton("뒤로");
+	private baseballGame game;
 	
 	public MainMenu2(JPanel panel) {
 		

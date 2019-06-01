@@ -1,3 +1,4 @@
+package baseball;
 
 public interface Iterator {
 	

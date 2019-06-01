@@ -1,24 +1,15 @@
 package baseball;
 
-import java.util.*;
-
-//Batter, pitcher, catcher
-public abstract class player extends management{
+public class realPlayer extends player {
+	private String name;
+	private int location;
+	private boolean isNull;
 	
-	
-	protected boolean isNull;
-	protected String name;
-	protected int location;
-	
-	public player() {
-		
-	}
-	
-	public player(String name, String team) {
+	public realPlayer(String name, String team) {
 		this.name = name;
 		super.team = team;
 		this.location = -1; //처음 플레이어가 생성되면 위치는 -1.
-		this.isNull=true;
+		this.isNull = true;
 	}
 
 	
@@ -45,10 +36,7 @@ public abstract class player extends management{
 		this.location = location;
 	}
 	
-	public boolean getisN() {
+	public boolean isNil() {
 		return isNull;
 	}
-	
 }
-
-

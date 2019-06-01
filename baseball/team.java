@@ -1,3 +1,4 @@
+package baseball;
 
 import java.util.*;
 import java.util.Iterator;
@@ -10,10 +11,8 @@ import java.io.IOException;
 
 public class team extends management implements Aggregate{
 	
-	protected boolean isHome;
-	
-	protected int score;
-	protected ArrayList<player> allPlayerList;//모든 선수 명단
+
+	private ArrayList<player> allPlayerList;//모든 선수 명단
 	protected ArrayList<player> entryList;//선발 명단
 	private int batter = 1;
 	private int win = 0;
@@ -29,7 +28,7 @@ public class team extends management implements Aggregate{
 		addPlayer();
 		this.entryList=new ArrayList<player>();
 	}
-	
+
 	public player getPlayerAt(int index) {
 		return entryList.get(index);
 	}
@@ -37,7 +36,7 @@ public class team extends management implements Aggregate{
 	public int getLength() {
 		return entryList.size();
 	}
-
+	
 	public ArrayList<player> getAllEntryList(){
 		return this.allPlayerList;
 	}
@@ -89,7 +88,7 @@ public class team extends management implements Aggregate{
             BufferedReader bufReader = new BufferedReader(filereader);
             String line = "";
             while((line = bufReader.readLine()) != null){
-            	allPlayerList.add(new player(line, team));
+            	allPlayerList.add(new realPlayer(line, team));
             }         
             bufReader.close();
         }catch (FileNotFoundException e) {
@@ -184,10 +183,9 @@ public class team extends management implements Aggregate{
 	public int getLose() {
 		return lose;
 	}
-
+	
 	public Iterator iterator() {
 		return new teamIterator(this);
 	}
-	
 	
 }

@@ -1,4 +1,4 @@
-
+package baseball;
 
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
@@ -9,26 +9,32 @@ import java.util.Iterator;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 public class EntryPanel extends JPanel implements ActionListener{
 	
-	JButton goR = new JButton("->");
-	JButton goL = new JButton("<-");
-	JButton btnCompelete = new JButton("Compelete");
+	private JButton goR = new JButton("->");
+	private JButton goL = new JButton("<-");	
+	private JButton addNull = new JButton("add");
 	
-	ArrayList<player> fnWholeEntry;
+	private JButton btnCompelete = new JButton("Compelete");
 	
-	ArrayList<String> wholePlayers;
-	ArrayList<String> entry;
 	
-	JList playerList;
-	JList entryList;
+	private ArrayList<String> wholePlayers;
+	private ArrayList<String> entry;
 	
-	team t;
+	private ArrayList<String> origin;
+	
+	private JList playerList;
+	private JList entryList;
+	
+	private team t;
 	
 	private JPanel contentPane;
+	private JTextField textField;
 	
 public EntryPanel(JPanel panel, team team1) {
 		
@@ -36,6 +42,7 @@ public EntryPanel(JPanel panel, team team1) {
 		setBounds(0, 0, 306, 248);
         setLayout(null);
         t= team1;
+
         
          initPanel();
 		contentPane=panel;
@@ -46,7 +53,7 @@ public void initPanel() {
     
   
 	
-    btnCompelete.setBounds(100, 186, 117, 29);
+    btnCompelete.setBounds(100, 266, 117, 29);
     btnCompelete.addActionListener(this);
     goR.setLocation(117, 52);
     goR.setSize(75, 29);
@@ -57,6 +64,17 @@ public void initPanel() {
 	goL.setLocation(117, 93);
 	goL.addActionListener(this);
 	
+	addNull.setSize(75, 29);
+	addNull.setLocation(117, 214);
+	addNull.addActionListener(this);
+	
+	textField = new JTextField();
+    textField.setBounds(87, 176, 130, 26);
+    
+    
+    add(textField);
+    textField.setColumns(10);
+	this.add(addNull);
 	this.add(btnCompelete);
     this.add(goR);
     this.add(goL);
@@ -76,35 +94,39 @@ public void initPanel() {
 	//Assign new Arraylist.
 	wholePlayers = new ArrayList<String>();
 	entry = new ArrayList<String>();
-	
+	origin = new ArrayList<String>();
 	
 	//Assign player names into Arraylist.
 	
-	for(player p1 : t.getAllEntryList()) {
-		wholePlayers.add(p1.getName());
-	}
-	
-	Iterator it = t.iterator();
-	while(it.hasNext()) {
-		player p = (player)it.next();
-		entry.add(p.getName());
-	}
-//	for(player p2 : t.getEntryList()) {
-//		entry.add(p2.getName());
-//	}
-	
-	for (String element : wholePlayers) {
-	   ((DefaultListModel) playerList.getModel()).addElement(element);
-	}
+		for(player p1 : t.getAllEntryList()) {
+			
+			wholePlayers.add(p1.getName());
+			origin.add(p1.getName());
+		}
+		
+		Iterator it = t.iterator();
+		while(it.hasNext()) {
+			player p = (player)it.next();
+			entry.add(p.getName());
+		}
+//		for(player p2 : t.getEntryList()) {
+//			entry.add(p2.getName());
+//		}
+		
+		for (String element : wholePlayers) {
+		   ((DefaultListModel) playerList.getModel()).addElement(element);
+		}
 
-	for (String element : entry) {
-	   ((DefaultListModel) entryList.getModel()).addElement(element);
-	}
+		for (String element : entry) {
+		   ((DefaultListModel) entryList.getModel()).addElement(element);
+		}
 	    
 	    scrollPane_1.setViewportView(playerList);
 	    scrollPane.setViewportView(entryList);
 	    this.add(scrollPane);
 	    this.add(scrollPane_1);
+	    
+	    
 	    
 	    
 }
@@ -131,18 +153,39 @@ public void actionPerformed(ActionEvent e) {
 			else if(e.getSource().equals(this.btnCompelete))
 			{
 				
+				boolean isN = false;
 				wholePlayers = setJListToArrayList(playerList, wholePlayers);
 				entry = setJListToArrayList(entryList, entry);
 				
 				t.setFinalEntry(this.setFinalEntry());
 				t.setFinalPlayerList(this.setFinalPlayerList());
 				
-				CardLayout cardLayout = (CardLayout) contentPane.getLayout();
-                cardLayout.show(contentPane, "League");	
+				Iterator it = t.entryList.iterator();
+				while(it.hasNext()) {
+					if(it.next() instanceof nullPlayer) {
+						isN = true;
+						break;
+					}
+					
+				}
+				
+	
+				if(isN) {
+					JOptionPane.showMessageDialog(null, "Null Player가 존재합니다.", "Null Object Alert", JOptionPane.INFORMATION_MESSAGE);
+				}else {
+					CardLayout cardLayout = (CardLayout) contentPane.getLayout();
+	                cardLayout.show(contentPane, "League");	
+				}
 				
 				
 			}
-			
+			else if(e.getSource().equals(this.addNull)) {
+				
+				String pName = this.textField.getText();
+				this.textField.setText("");
+				nullPlayer nP = new nullPlayer(pName);
+				addActionPerformed(entryList, pName, e);
+			}
 		
 }
 
@@ -163,6 +206,7 @@ private void addActionPerformed(JList list,String player, ActionEvent e) {
   }
 
 public ArrayList<String> setJListToArrayList(JList list, ArrayList<String> arrList) {
+	
 	arrList = new ArrayList(list.getModel().getSize());
 	for (int i = 0; i < list.getModel().getSize(); i++) {
 	    arrList.add((String) list.getModel().getElementAt(i));
@@ -177,7 +221,14 @@ public ArrayList<player> setFinalEntry(){
 	ArrayList<player> finalEntry = new ArrayList<player>();
 	
 	for(String playerName : this.entry) {
-		finalEntry.add(new player(playerName,t.getTeam()));
+
+		if(!origin.contains(playerName)) {
+			System.out.println(playerName);
+			finalEntry.add(new nullPlayer(playerName));
+		}else {
+			finalEntry.add(new realPlayer(playerName,t.getTeam()));
+		}
+		
 	}
 	return finalEntry;
 }
@@ -187,7 +238,7 @@ public ArrayList<player> setFinalPlayerList(){
 	ArrayList<player> playerList = new ArrayList<player>();
 	
 	for(String playerName : this.wholePlayers) {
-		playerList.add(new player(playerName,t.getTeam()));
+		playerList.add(new realPlayer(playerName,t.getTeam()));
 	}
 	return playerList;
 }

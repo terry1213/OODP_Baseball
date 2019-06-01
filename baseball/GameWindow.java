@@ -1,4 +1,4 @@
-
+package baseball;
 
 import java.applet.*;
 import java.awt.*;
@@ -12,11 +12,11 @@ import java.awt.event.ActionListener;
 
 public class GameWindow extends JFrame {
 	
-	JPanel contentPane = new JPanel();
+	private JPanel contentPane = new JPanel();
 	
-	MainMenu mainPanel;
-	MainMenu2 mainPanel2 ;
-	LeagueMenu leaguePanel;
+	private MainMenu mainPanel;
+	private MainMenu2 mainPanel2 ;
+	private LeagueMenu leaguePanel;
 
 	private static GameWindow gamewindowObject;
 	

@@ -1,4 +1,4 @@
-
+package baseball;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -18,33 +18,33 @@ public class baseballGame {
 	private JPanel contentPane;
 	
 	
-	protected team t1;   //팀 1번 
-	protected team t2;   //팀 2번 
+	private team t1;   //팀 1번 
+	private team t2;   //팀 2번 
 	
 	private team currentTeam = new team();    //현재 팀에 새로운 팀 할당.
 	private ArrayList<String> resultList;     //공을 던진 후의 결과를 모아놓은 리스트.
 	
-	protected int inning;  //현재 이닝.
+	private int inning;  //현재 이닝.
 
-	protected boolean isGameOver;  //게임 종료 여부.
-	protected int strike;  //스트라이크
-	protected int ball; // 볼.
-	protected int out; // 아웃
+	private boolean isGameOver;  //게임 종료 여부.
+	private int strike;  //스트라이크
+	private int ball; // 볼.
+	private int out; // 아웃
 	
-	protected String msg1; //메시지를 담는 변수. 
-	protected int gameFlag; //0이 되면 체인지, 1이 되면 
+	private String msg1; //메시지를 담는 변수. 
+	private int gameFlag; //0이 되면 체인지, 1이 되면 
 	private int[][] scoreBoard = new int[2][11];	//스코어보드
 	private int[] scoreSum = new int[2];
 	
-	JFrame frame = new JFrame();
+	private JFrame frame = new JFrame();
     
 
-    JTextArea ta = new JTextArea();
-    TextAreaOutputStream taos = new TextAreaOutputStream( ta, 1000 );
-    PrintStream ps = new PrintStream( taos );
+    private JTextArea ta = new JTextArea();
+    private TextAreaOutputStream taos = new TextAreaOutputStream( ta, 1000 );
+    private PrintStream ps = new PrintStream( taos );
 	
 
-	field fieldPanel;
+	private field fieldPanel;
 	
 	
 //	-----------constructor for normal game--------------
@@ -69,6 +69,7 @@ public class baseballGame {
 	    frame.setSize(800,600);
 	    
 	    
+	    
 		this.t1 = new team("HGU");
 		t1.setEntry();
 		this.t2 = new team("COM");
@@ -91,6 +92,15 @@ public class baseballGame {
 		this.strike = 0;
 		this.ball = 0;
 		this.out = 0;
+		
+		frame.add( new JLabel(" Outout" ), BorderLayout.NORTH );
+		System.setOut( ps );
+	    System.setErr( ps );
+	    frame.add( new JScrollPane( ta )  );
+	    frame.pack();
+	    frame.setVisible( true );
+	    frame.setSize(800,600);
+		
 		this.t1 = t1;
 		this.t1.resetHit();
 		this.t2 = t2;
