@@ -6,13 +6,13 @@ import javax.swing.JPanel;
 
 public class arcadeBaseballGame extends baseballGame{
 	
-	private team currentTeam = new team();    //현재 팀에 새로운 팀 할당.
-	private int strike;  //스트라이크
-	private int ball; // 볼.
-	private int out; // 아웃
-	
-	private String msg1; //메시지를 담는 변수. 
-	private int gameFlag; //0이 되면 체인지, 1이 되면 
+//	private team currentTeam = new team();    //현재 팀에 새로운 팀 할당.
+//	private int strike;  //스트라이크
+//	private int ball; // 볼.
+//	private int out; // 아웃
+//	
+//	private String msg1; //메시지를 담는 변수. 
+//	private int gameFlag; //0이 되면 체인지, 1이 되면 
 
 	
 	//	-----------constructor for normal game--------------
@@ -22,7 +22,7 @@ public class arcadeBaseballGame extends baseballGame{
 
 	//---------------------------------Template Hook Method---------------------------------------------
 	public void clearCount(){
-		if(out == 4) //
+		if(out == 2) //
 			out = 0;
 			ball = 0;
 			strike = 0;
@@ -39,7 +39,7 @@ public class arcadeBaseballGame extends baseballGame{
 			out++; //아웃카운트 증가.
 			gameFlag = 1;
 			msg1 = "삼진 아웃!";
-			if(out == 4)
+			if(out == 2)
 			{
 				gameFlag = 0;
 				msg1 = "삼진 아웃! 공수가 교체됩니다.";
@@ -61,7 +61,7 @@ public class arcadeBaseballGame extends baseballGame{
 	}
 	public void func_out() {
 		out++;
-		if(out == 4)
+		if(out == 2)
 		{
 			currentTeam.entryList.get(currentTeam.getBatter()-1).setLocation(-1); //아웃.
 			currentTeam.nextBatter();
