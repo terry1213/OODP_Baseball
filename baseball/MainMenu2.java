@@ -19,7 +19,7 @@ public class MainMenu2 extends Menu implements ActionListener{
 	private JButton	leagueGBt = new JButton("리그");
 	private JButton arcadeGBt = new JButton("아케이드");
 	private JButton	backBt = new JButton("뒤로");
-	private baseballGame game;
+	private baseballFactory bf=new realBaseballFactory();
 	
 	public MainMenu2(JPanel panel) {
 		
@@ -67,7 +67,8 @@ public class MainMenu2 extends Menu implements ActionListener{
 		//�븸�뀡 由ъ뒪�꼫 �옱�젙�쓽
 				if (e.getSource().equals(this.normalGBt))
 				{	
-					baseballGame game = new baseballGame(contentPane);
+					baseballGame game=bf.createBaseballGame("normal", contentPane);
+					//baseballGame game = new baseballGame(contentPane);
 	                
 				}
 				else if(e.getSource().equals(this.leagueGBt))
@@ -77,7 +78,8 @@ public class MainMenu2 extends Menu implements ActionListener{
 				}
 				else if(e.getSource().equals(this.arcadeGBt))
 				{
-					JOptionPane.showMessageDialog(this, "아케이드 모드");
+					baseballGame game=bf.createBaseballGame("arcade", contentPane);
+					//JOptionPane.showMessageDialog(this, "아케이드 모드");
 				}
 				else if(e.getSource().equals(this.backBt))
 				{
