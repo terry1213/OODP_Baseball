@@ -22,7 +22,6 @@ public class LeagueMenu extends Menu implements ActionListener{
  	private finishedLeague finished = new finishedLeague();
 	
 	private League nLeague;
-	
 	public LeagueMenu(JPanel panel) {
 		nLeague = new League();
 		setBackground();
@@ -69,7 +68,7 @@ public class LeagueMenu extends Menu implements ActionListener{
 
 				if (e.getSource().equals(this.proceedGBt))
 				{	
-					baseballGame game = new baseballGame(contentPane, nLeague.getTeam(0), nLeague.getTeam(1));
+					baseballGame game = new normalBaseballGame(contentPane, nLeague.getTeam(0), nLeague.getTeam(1));
 					nLeague.fakeComGame();
 					nLeague.increaseRound();
 					if(nLeague.getRound() == 9) {
